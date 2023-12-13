@@ -1,3 +1,8 @@
+# I think this is what I was originally thinking it should be. 
+# The idea is that you place a bet. Double it if you lose. Can't place a bet if you run out of money. 
+# Do some number of spins. Repeat the process.
+# It appears as though you don't come out ahead this way, but there is another way that looks like it may...
+
 import random
 
 def play_roulette(starting_bankroll, starting_bet_amount, spins):
