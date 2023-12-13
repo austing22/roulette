@@ -1,0 +1,82 @@
+import random
+
+def play_roulette(starting_bankroll, starting_bet_amount, spins):
+    bankroll = starting_bankroll
+    pocket = 0
+    max_win_streak = 0
+    max_loss_streak = 0
+    current_loss_streak = 0
+    current_win_streak = 0
+    current_bet = starting_bet_amount
+
+    for spin in range(2 * spins):
+        # Check if player has played number of spins and not in a loss streak
+        if spin >= spins and current_loss_streak == 0:
+            break
+
+        # Check if the bankroll is below 0
+        if bankroll <= 0:
+            break
+
+        # Simulating a spin on the roulette wheel (0, 00 for green, 1-36 for red/black)
+        result = random.randint(0, 37)  # 0 and 00 included
+
+        if result == 37 or result == 0:  # Green for 0 and 00
+            bankroll -= current_bet
+            current_loss_streak += 1
+            current_win_streak = 0
+            current_bet *= 2 # Double the bet on loss
+        elif result % 2 == 0:  # Black for even numbers
+            bankroll += current_bet
+            current_win_streak += 1
+            current_loss_streak = 0
+            current_bet = starting_bet_amount # Go back to original bet amount
+        else:  # Red for odd numbers
+            bankroll -= current_bet
+            current_loss_streak += 1
+            current_win_streak = 0
+            current_bet *= 2 # Double the bet on loss
+
+        # Update maximum win and loss streaks
+        max_win_streak = max(max_win_streak, current_win_streak)
+        max_loss_streak = max(max_loss_streak, current_loss_streak)
+
+        # If the bankroll exceeds the starting amount, pocket the excess
+        if bankroll > starting_bankroll:
+            pocket += bankroll - starting_bankroll
+            bankroll = starting_bankroll  # Reset the bankroll to the starting amount
+
+    return pocket, max_win_streak, max_loss_streak, bankroll <= 0
+
+starting_bankroll = 100  
+bet_amount = 25
+total_spins = 10
+total_simulations = 10000
+
+total_winnings = 0
+total_max_win_streak = 0
+total_max_loss_streak = 0
+games_cut_short = 0
+
+for _ in range(total_simulations):
+    winnings, max_win_streak, max_loss_streak, game_cut_short = play_roulette(starting_bankroll, bet_amount, total_spins)
+    total_winnings += winnings
+    total_max_win_streak += max_win_streak
+    total_max_loss_streak += max_loss_streak
+    if game_cut_short:
+        games_cut_short += 1
+
+average_winnings = total_winnings / (total_simulations)
+average_max_win_streak = total_max_win_streak / total_simulations
+average_max_loss_streak = total_max_loss_streak / total_simulations
+total_lost = games_cut_short * starting_bankroll
+at_risk_funds = starting_bankroll * total_simulations
+net_gain_loss = total_winnings - total_lost
+
+print(f"Average Winnings Stored Away: ${average_winnings:.2f}")
+print(f"Average Longest Win Streak: {average_max_win_streak:.2f}")
+print(f"Average Longest Loss Streak: {average_max_loss_streak:.2f}")
+print(f"Games Cut Short: {games_cut_short}")
+print(f"Net Gain/Loss: {net_gain_loss}")
+print(f"ROI: {(net_gain_loss / at_risk_funds) * 100}")
+      
