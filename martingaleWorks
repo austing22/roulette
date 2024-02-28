@@ -1,4 +1,17 @@
 import random
+'''
+Here is why this shows a win: 
+This restricts your bet size to be under the bankroll. 
+Assuming the $5 initial bet, this allows you to get 5 spins of losing in. 
+This is happening because it doesn't subtract the bet until after the loss. 
+When the program goes to calculate the total_lost, it is multiplying the games_cut_short by the bankroll. 
+That bankroll does NOT reflect the actual amount you would lose if a game were cut short. 
+The actual amount is dependent upon the bet size and bankroll. 
+For example, a $5 bet with $100 bankroll means you would lose $155 on a game cut short. 
+
+So this does NOT beat the house...this was a botched math...continue looking. 
+'''
+
 
 def play_roulette(starting_bankroll, starting_bet_amount, spins):
     bankroll = starting_bankroll
@@ -70,6 +83,7 @@ average_winnings = total_winnings / (total_simulations)
 average_max_win_streak = total_max_win_streak / total_simulations
 average_max_loss_streak = total_max_loss_streak / total_simulations
 total_lost = games_cut_short * starting_bankroll
+# That is not taking into account that when a game is cut short in this, it is actually a 155 loss because the bet is not deducted from the bankroll before the spin...this allows for you to bet more than you have
 at_risk_funds = starting_bankroll * total_simulations
 net_gain_loss = total_winnings - total_lost
 
